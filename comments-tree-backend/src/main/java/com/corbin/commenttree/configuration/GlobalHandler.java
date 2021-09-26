@@ -1,6 +1,6 @@
-package com.corbin.commentstree.configuration;
+package com.corbin.commenttree.configuration;
 
-import com.corbin.commentstree.bean.vo.RestResult;
+import com.corbin.commenttree.bean.vo.RestResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

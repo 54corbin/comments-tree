@@ -1,8 +1,6 @@
-package com.corbin.commentstree.controller;
+package com.corbin.commenttree.controller;
 
-import com.corbin.commentstree.bean.vo.RestResult;
-import com.corbin.commentstree.dao.UserDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.corbin.commenttree.bean.vo.RestResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.corbin.commentstree.bean.vo;
+package com.corbin.commenttree.bean.vo;
 
 /**
  * @author corbin

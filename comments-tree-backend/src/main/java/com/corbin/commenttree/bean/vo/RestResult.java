@@ -1,4 +1,4 @@
-package com.corbin.commentstree.bean.vo;
+package com.corbin.commenttree.bean.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
