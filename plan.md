@@ -29,7 +29,7 @@
       6. 
    2. [x] 无限树结构存储留言和回复的方案
       1. 方案：左右值编码预排序
-      2. user表字段： id,comment,lft,rgt,leve,gmt_create, gmt_modified
+      2. comment 表字段： id,content,lft,rgt,leve,parent_id,gmt_create, gmt_modified
    3. [x] 发表、查看留言和评论
       1. 发表API（parentNode为0：发布留言，其他：发布回复）：`POST /v1/comment 请求头带token:"authentication:string" body{"parentNode":int,"comment":"string"} 响应：{"status":int,"message":"string","data":object}` 
       2. 获取API（parentNode为0：获取留言，其他：获取回复）：`GET /v1/comment body{"parentNode":int,"size":int} 响应：{"status":int,"message":"string","data":object}`
@@ -39,14 +39,14 @@
 3. [x] 设计前后端交互需要的API
 4. [x] 技术选型
    1. 前端：vue
-   2. 后端：springBoot、H2、JPA、JWT
+   2. 后端：springBoot、H2、Mybatis、JWT
 5. [x] 细化&列出可量化、可执行的开发计划
-6. [] 搭建后端框架
+6. [x] 搭建后端框架
 
 ---
 ## 26/09/2021
-1. [ ] 后端开发实现无限树结构插入和查询功能
-2. [ ] 验证插入和查询效率是否满足要求
+1. [x] 后端开发实现无限树结构插入和查询功能
+2. [x] 验证插入和查询效率是否满足要求
 ---
 ## 27/09/2021
 1. [ ] 开发完成发布和获取留言接口及逻辑（含单元测试）
