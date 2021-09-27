@@ -36,16 +36,43 @@ public class RestResult<T> {
     private T data;
 
     /**
+     * 通用返回成功
+     * @return 统一响应对象
+     */
+    public static RestResult<Object> success(){
+        return RestResult.builder()
+                .success(false)
+                .status(RestCodeEnum.SUCCESS.code)
+                .message(RestCodeEnum.SUCCESS.message)
+                .build();
+    }
+
+    /**
+     * 通用返回成功(带数据体)
+     * @return 统一响应对象
+     */
+    public static<T> RestResult<T> success(T data){
+        return new RestResult<>(true, RestCodeEnum.SUCCESS.code, RestCodeEnum.SUCCESS.message, data);
+
+    }
+
+    /**
      * 通用返回失败（带失败说明消息）
      * @param msg 失败说明消息
      * @return 统一响应对象
      */
-    public static RestResult<Object> fail(String msg){
-        return RestResult.builder()
-                .success(false)
-                .status(RestCodeEnum.FAIL.code)
-                .message(msg)
-                .build();
+    public static<T> RestResult<T> fail(String msg){
+        return new RestResult<>(false,RestCodeEnum.FAIL.code,msg,null);
+    }
+
+    /**
+     * 通用返回失败（带失败说明消息和状态码）
+     * @param msg 失败说明消息
+     * @param status 状态码
+     * @return 统一响应对象
+     */
+    public static RestResult<Object> fail(String msg,Integer status){
+        return new RestResult<>(false,status,msg,null);
     }
 
     /**
