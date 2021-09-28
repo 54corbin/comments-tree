@@ -18,5 +18,9 @@ spring:
     console:
       enabled: true
       path: /h2
-
+jwt:
+  #http请求的header中的key
+  header-name: Authentication
+  #密钥
+  secret: jh4w3%jjk2#liqpvb@ser
 
