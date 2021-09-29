@@ -1,7 +1,6 @@
 package com.corbin.commenttree.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.additional.query.impl.LambdaQueryChainWrapper;
-import com.corbin.commenttree.bean.po.Comment;
 import com.corbin.commenttree.bean.vo.CommentVO;
 import com.corbin.commenttree.bean.vo.PageRestResult;
 import com.corbin.commenttree.bean.vo.RestResult;
@@ -12,11 +11,14 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
 class CommentTreeServiceImplTest {
 

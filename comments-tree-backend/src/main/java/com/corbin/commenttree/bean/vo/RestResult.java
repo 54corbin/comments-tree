@@ -41,7 +41,7 @@ public class RestResult<T> {
      */
     public static RestResult<Object> success(){
         return RestResult.builder()
-                .success(false)
+                .success(true)
                 .status(RestCodeEnum.SUCCESS.code)
                 .message(RestCodeEnum.SUCCESS.message)
                 .build();
@@ -79,11 +79,7 @@ public class RestResult<T> {
      * 通用返回服务器异常
      * @return 统一响应对象
      */
-    public static RestResult<Object> error(){
-        return RestResult.builder()
-                .success(false)
-                .status(RestCodeEnum.ERROR.code)
-                .message(RestCodeEnum.ERROR.message)
-                .build();
+    public static<T> RestResult<T> error(){
+        return new RestResult<>(false,RestCodeEnum.ERROR.code,RestCodeEnum.ERROR.message,null);
     }
 }
