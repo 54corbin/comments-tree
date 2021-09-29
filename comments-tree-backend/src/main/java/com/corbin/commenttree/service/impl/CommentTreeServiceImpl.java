@@ -113,6 +113,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
         IPage<Comment> page = new LambdaQueryChainWrapper<>(commentMapper)
                 .between(Comment::getLft, parent.getLft(), parent.getRgt())
                 .le(Comment::getLevel, parent.getLevel() + deep)
+                .ne(Comment::getId,parent.getId())
                 .orderByAsc(Comment::getLevel)
                 .orderByDesc(Comment::getGmtCreate)
                 .page(new Page<>(currentPage, size));
