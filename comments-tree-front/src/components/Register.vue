@@ -1,236 +1,131 @@
 <template>
-  <div>
-    <div class="top_div"></div>
-    <div
-      style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 224px; text-align: center;">
-      <div style="width: 165px; height: 96px; position: absolute;">
-        <div class="tou"></div>
-        <div class="initial_left_hand" id="left_hand"></div>
-        <div class="initial_right_hand" id="right_hand"></div>
-      </div>
-
-
-      <p style="padding: 30px 0px 10px; position: relative;"><span
-        class="e_logo"></span> <input id="loginName" class="ipt" type="text" v-model="userName" placeholder="请输入用户名"
-                                      value="">
-      </p>
-      <p style="padding: 30px 0px 10px; position: relative;"><span
-        class="u_logo"></span> <input id="email" class="ipt" type="text" v-model="email" placeholder="请输邮箱"
-                                      value="">
-      </p>
-      <p style="position: relative;"><span class="p_logo"></span>
-        <input class="ipt" id="password" type="password" v-model="password" placeholder="请输入密码" value="">
-      </p>
-      <p style="position: relative;margin-top: 10px;"><span class="p_logo"></span>
-        <input class="ipt" id="password2" type="password" v-model="password2" placeholder="请输入密码" value="">
-      </p>
-
-
-      <div id="errorText" style="height: 20px;margin-top:10px">
-        <p style="color: red;display: none">用户名密码错误请重新输入</p>
-      </div>
-      <div
-        style="height: 50px; line-height: 50px; margin-top: 30px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-        <!--        <p style="margin: 0px 35px 20px 45px;"><span style="float: left;"><a style="color: rgb(204, 204, 204);"-->
-        <!--                                                                             href="#">忘记密码?</a></span>-->
-        <router-link to='/'>
-          <span style="float: left;margin-left: 10px;font-size: 14px;">已有账号，现在登录</span>
-        </router-link>
-
-        <span style="float: right;">
-              <a id="loginBtn" @click="register()">注册</a>
-           </span></div>
+  <div class="login clearfix">
+    <div class="login-wrap">
+      <el-row type="flex" justify="center">
+        <el-form ref="loginForm" :model="user" status-icon label-width="80px">
+          <h3>注册</h3>
+          <hr>
+          <el-form-item prop="username" label="用户名">
+            <el-input v-model="user.username" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item prop="email" label="邮箱">
+            <el-input v-model="user.email" placeholder="请输入邮箱"></el-input>
+          </el-form-item>
+          <el-form-item prop="password" label="设置密码">
+            <el-input v-model="user.password" show-password placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <router-link to="/login" >已有帐号，立即登录</router-link>
+          <el-form-item>
+            <el-button type="primary" icon @click="doRegister()">注册账号</el-button>
+          </el-form-item>
+        </el-form>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 
-  export default {
-    name: 'Register',
-    data() {
-      return {
-        userName: "",
-        password: "",
-        password2: ""
+export default {
+  name: "register",
+  data() {
+    return {
+      user: {
+        username: "",
+        email: "",
+        password: ""
+      },
+    };
+  },
+  created() {
+  },
+  methods: {
+    doRegister() {
+      if (!this.user.username) {
+        this.$message.error("请输入用户名！");
+        return;
       }
-    },
-    created() {
+      let usernameReg = /^[a-zA-Z0-9]{5,20}/;
+      if (!usernameReg.test(this.user.username)) {
+        this.$message.error("用户名：只能使用长度在5~20之间的字母和数字！");
+        return;
+      }
+      if (!this.user.email) {
+        this.$message.error("请输入邮箱！");
+        return;
+      }
+      let emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (!emailReg.test(this.user.email)) {
+        this.$message.error("请输入有效的邮箱！");
+        return;
+      }
+      if (!this.user.password) {
+        this.$message.error("请输入密码！");
+        return;
+      }
+      let passwordReg = /(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[`~$@!%*#?&])[A-Za-z\d`~$@!%*#?&]{8,20}$/;
+      if (!passwordReg.test(this.user.password)) {
+        this.$message.error("密码:应符合长度在8~20之间，至少包含一个大写、一个小写、一个数字、一个特殊符号！");
+        return;
+      }
 
-    },
-    methods: {
-      register: function () {
-        let fd = {
-            'username':this.userName,
-            'email':this.email,
-            'password':this.password
-
-        }
-
-        let config = {
-          headers: {
-            'Content-Type': 'application/json'
+      // this.$router.push({ path: "/" }); //无需向后台提交数据，方便前台调试
+      axios
+        .post("/user", {
+          username: this.user.username,
+          email: this.user.email,
+          password: this.user.password
+        })
+        .then(res => {
+          // console.log("输出response.data", res.data);
+          // console.log("输出response.data.status", res.data.status);
+          if (res.data.success) {
+            this.$message.success('注册成功，请登录！')
+            this.$router.push({path: "/login"});
+          } else {
+            alert("您输入的用户名或邮箱地址已存在！");
           }
-        }
-
-        if (this.password === this.password2) {
-          this.$axios.post("/user", fd, config).then(res => {
-            alert(res.data.message)
-          }).catch(res => {
-            alert(res.data.message)
-          })
-        } else {
-          alert("两次输入的密码不同")
-        }
-
-      }
-
+        });
     }
   }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  body {
-    background: #ebebeb;
-    font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "\9ED1\4F53", Arial, sans-serif;
-    color: #222;
-    font-size: 12px;
-  }
+.login {
+  width: 100%;
+  height: 740px;
+  background: url("../assets/images/bg-01.jpg") no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
 
-  * {
-    padding: 0px;
-    margin: 0px;
-  }
+.login-wrap {
+  width: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  background-size: cover;
+  height: 370px;
+  margin: 215px auto;
+  padding-top: 10px;
+  line-height: 40px;
+}
 
-  .top_div {
-    background: #008ead;
-    width: 100%;
-    height: 400px;
-  }
+h3 {
+  color: #0babeab8;
+  font-size: 24px;
+}
 
-  .ipt {
-    border: 1px solid #d3d3d3;
-    padding: 10px 10px;
-    width: 290px;
-    border-radius: 4px;
-    padding-left: 35px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
-  }
+hr {
+  background-color: #444;
+  margin: 20px auto;
+}
 
-  .ipt:focus {
-    border-color: #66afe9;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
-  }
-
-  .u_logo {
-    background: url("../assets/images/username.png") no-repeat;
-    padding: 10px 10px;
-    position: absolute;
-    top: 43px;
-    left: 40px;
-
-  }
-  .e_logo {
-    background: url("../assets/images/username.png") no-repeat;
-    padding: 10px 10px;
-    position: absolute;
-    top: 43px;
-    left: 40px;
-
-  }
-
-  .p_logo {
-    background: url("../assets/images/password.png") no-repeat;
-    padding: 10px 10px;
-    position: absolute;
-    top: 12px;
-    left: 40px;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  .tou {
-    background: url("../assets/images/tou.png") no-repeat;
-    width: 97px;
-    height: 92px;
-    position: absolute;
-    top: -87px;
-    left: 140px;
-  }
-
-  .left_hand {
-    background: url("../assets/images/left_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    left: 150px;
-  }
-
-  .right_hand {
-    background: url("../assets/images/right_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    right: -64px;
-  }
-
-  .initial_left_hand {
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    left: 100px;
-  }
-
-  .initial_right_hand {
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    right: -112px;
-  }
-
-  .left_handing {
-    background: url("../assets/images/left-handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -24px;
-    left: 139px;
-  }
-
-  .right_handinging {
-    background: url("../assets/images/right_handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -21px;
-    left: 210px;
-  }
-
-  #loginBtn {
-    margin-right: 30px;
-    background: rgb(0, 142, 173);
-    padding: 7px 10px;
-    border-radius: 4px;
-    border: 1px solid rgb(26, 117, 152);
-    border-image: none;
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    cursor: pointer;
-  }
-
+.el-button {
+  width: 80%;
+  margin-left: -50px;
+}
 </style>
