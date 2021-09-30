@@ -58,7 +58,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public PayloadDto getDefaultPayloadDto() {
         //过期时间
-        LocalDateTime exp = LocalDateTime.now().plusMinutes(30);
+        LocalDateTime exp = LocalDateTime.now().plusMinutes(20);
         return PayloadDto.builder()
                 .iat(System.currentTimeMillis())
                 .exp(exp.toInstant(ZoneOffset.of("+8")).toEpochMilli())
