@@ -175,6 +175,7 @@ export default {
           id: newNode.id,
           username: newNode.username,
           label: newNode.content,
+          level: newNode.level,
           parentId: newNode.parentId,
           childrenCount: newNode.childrenCount,
           createTime: newNode.createTime
