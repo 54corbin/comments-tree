@@ -28,7 +28,7 @@ class UserServiceImplTest {
 @Order(1)
     @Test
     void register() {
-        UserDto userDto = new UserDto("firstUser","corbin@gmail.com","1q2w$rr1w");
+        UserDto userDto = new UserDto("firstUser","corbin@gmail.com","1q2w$rr1w",false);
 
         RestResult<Long> resp = userService.register(userDto);
         assert resp.getSuccess();

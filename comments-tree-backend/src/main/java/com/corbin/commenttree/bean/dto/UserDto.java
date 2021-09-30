@@ -40,4 +40,9 @@ public class UserDto {
     @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[`~$@!%*#?&])[A-Za-z\\d`~$@!%*#?&]{8,20}$", message = "密码:应符合长度在8~20之间，至少包含一个大写、一个小写、一个数字、一个特殊符号")
     private String password;
 
+    /**
+     * 记住我（有效期一个月，登录时用）
+     */
+    private boolean remember;
+
 }

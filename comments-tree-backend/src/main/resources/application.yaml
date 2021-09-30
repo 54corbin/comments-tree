@@ -23,4 +23,6 @@ jwt:
   header-name: Authentication
   #密钥
   secret: jh4w3%jjk2#liqpvb@ser
+  #勾选记住我允许的token有效期30天（秒）
+  max-duration: 2592000
 

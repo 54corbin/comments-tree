@@ -18,6 +18,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 /**
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    @Value("${jwt.max-duration}")
+    private long maxDuration;
 
     public UserServiceImpl(JwtTokenService jwtTokenService, UserMapper userMapper) {
         this.jwtTokenService = jwtTokenService;
@@ -60,6 +64,12 @@ public class UserServiceImpl implements UserService {
                     PayloadDto payload = jwtTokenService.getDefaultPayloadDto();
                     payload.setUserId(u.getId());
                     payload.setUsername(u.getUsername());
+
+                    //勾选了记住我
+                    if(user.isRemember()){
+                        LocalDateTime exp = LocalDateTime.now().plusSeconds(maxDuration);
+                        payload.setExp(exp.toInstant(ZoneOffset.of("+8")).toEpochMilli());
+                    }
 
                     try {
                         String token = jwtTokenService.generateTokenByHMAC(JSON.toJSONString(payload), DigestUtils.md5DigestAsHex(secret.getBytes()));
