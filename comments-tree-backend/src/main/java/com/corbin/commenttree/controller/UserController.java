@@ -1,12 +1,13 @@
 package com.corbin.commenttree.controller;
 
-import com.corbin.commenttree.annotation.AuthRequired;
 import com.corbin.commenttree.bean.dto.UserDto;
 import com.corbin.commenttree.bean.vo.RestResult;
 import com.corbin.commenttree.service.JwtTokenService;
 import com.corbin.commenttree.service.UserService;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -32,7 +33,7 @@ public class UserController {
      * 登录获取token
      * @return token
      */
-    @PostMapping("/token")
+    @PostMapping("/login")
     public RestResult<String> login(@RequestBody UserDto user) {
         return userService.login(user);
     }
