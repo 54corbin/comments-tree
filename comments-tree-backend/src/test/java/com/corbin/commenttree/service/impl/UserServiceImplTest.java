@@ -100,10 +100,10 @@ class UserServiceImplTest {
         assertNotNull(resp5.getData());
 
         /*
-         *邮箱+密码
+         *邮箱+密码(登录时username字段既代表用户名由代表邮箱号)
          */
-        userDto.setUsername(null);
-        userDto.setEmail("corbin@gmail.com");
+        userDto.setUsername("corbin@gmail.com");
+        userDto.setEmail(null);
         userDto.setPassword("1q2w$rr1w");
         RestResult<String> resp6 = userService.login(userDto);
         assert resp6.getSuccess();

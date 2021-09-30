@@ -30,7 +30,7 @@ public class UserController {
     }
 
     /**
-     * 登录获取token
+     * 登录获取token(登录时username字段既代表用户名由代表邮箱号)
      * @return token
      */
     @PostMapping("/login")
