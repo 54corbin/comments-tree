@@ -1,15 +1,17 @@
 package com.corbin.commenttree.controller;
 
+import com.corbin.commenttree.annotation.AuthRequired;
+import com.corbin.commenttree.bean.dto.PayloadDto;
 import com.corbin.commenttree.bean.vo.CommentVO;
 import com.corbin.commenttree.bean.vo.PageRestResult;
 import com.corbin.commenttree.bean.vo.RestResult;
 import com.corbin.commenttree.service.CommentTreeService;
+import com.corbin.commenttree.util.ThreadLocalUtil;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * 用于操作留言树
@@ -28,16 +30,17 @@ public class CommentController {
 
     /**
      * 提交留言或回复（父级id为0时代表留言）
-     * @param userId 用户id
      * @param content 留言或回复内容
      * @param parentId 父级id（所有留言的父级id固定为0）
      * @return 成功与否
      */
+    @AuthRequired
     @PostMapping
-    public RestResult<CommentVO> submit(@NotNull @RequestParam Long userId,
-                                        @NotBlank @RequestParam String content,@Min(value = 0) @RequestParam Long parentId) {
+    public RestResult<CommentVO> submit(@Length(min = 3,max = 200,message = "请输入3~200字的内容") @RequestParam String content,
+                                        @Min(value = 0) @RequestParam Long parentId) {
 
-        return commentTreeService.submit(userId,content,parentId);
+        PayloadDto jwtPayload = ThreadLocalUtil.get("jwtPayload");
+        return commentTreeService.submit(jwtPayload.getUserId(), jwtPayload.getUsername(), content,parentId);
     }
 
     /**

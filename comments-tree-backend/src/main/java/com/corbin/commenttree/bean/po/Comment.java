@@ -30,6 +30,8 @@ public class Comment {
     @TableField(value = "user_id")
     private Long userId;
 
+    private String username;
+
     /**
      * 留言或注释内容
      */

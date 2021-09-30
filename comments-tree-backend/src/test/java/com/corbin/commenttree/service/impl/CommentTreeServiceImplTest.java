@@ -38,7 +38,7 @@ class CommentTreeServiceImplTest {
         Integer beforeCount = new LambdaQueryChainWrapper<>(commentMapper).count();
         log.info("添加前共：{} 个节点",beforeCount);
 
-        RestResult<CommentVO> response = commentTreeService.submit(0L, "sdlf", 0L);
+        RestResult<CommentVO> response = commentTreeService.submit(0L,"admin", "sdlf", 0L);
 
         Integer afterCount = new LambdaQueryChainWrapper<>(commentMapper).count();
         log.info("添加结果:{}\n添加后共：{} 个节点",response,afterCount);
@@ -71,7 +71,7 @@ class CommentTreeServiceImplTest {
           创建100层
          */
         for (int i = 0; i <100; i++) {
-            commentTreeService.submit(0L,"test", (long)i);
+            commentTreeService.submit(0L,"admin","test", (long)i);
         }
 
         /*
@@ -80,7 +80,7 @@ class CommentTreeServiceImplTest {
         for (int i = 0; i < 100; i++) {
             log.info("createTree..level..{}/100..",i);
             for (int j = 0; j < 100-i; j++) {
-                commentTreeService.submit(0L,"test", (long)i);
+                commentTreeService.submit(0L,"admin","test", (long)i);
             }
         }
         long end = System.currentTimeMillis();

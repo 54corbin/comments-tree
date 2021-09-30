@@ -28,6 +28,11 @@ public class CommentVO {
     private Long userId;
 
     /**
+     * 发表该留言或回复的用户名称
+     */
+    private String username;
+
+    /**
      * 留言或回复数据
      */
     private String content;

@@ -38,7 +38,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
 
     @Transactional(rollbackFor = Throwable.class)
     @Override
-    public RestResult<CommentVO> submit(Long userId, String content, Long parentId) {
+    public RestResult<CommentVO> submit(Long userId,String username, String content, Long parentId) {
         //参数检查
         if(null == userId || null == parentId || StringUtils.isEmpty(content)){
             return RestResult.fail("参数异常");
@@ -51,6 +51,9 @@ public class CommentTreeServiceImpl implements CommentTreeService {
 
         //获取父节点详情
         Comment pc = commentMapper.selectById(parentId);
+        if(null == pc){
+            return RestResult.fail("请提供正确的父节点");
+        }
         //更新右值大于父节点右值的节点
         commentMapper.increaseRgt(pc.getRgt(),2);
         //更新左值大于父节点右值的节点
@@ -70,6 +73,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
         //构造待插入的节点，并插入
         Comment sub = Comment.builder()
                 .userId(userId)
+                .username(username)
                 .level(subLevel)
                 .content(content)
                 .lft(subLft)
@@ -87,6 +91,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
         CommentVO respVO = CommentVO.builder()
                 .id(sub.getId())
                 .userId(sub.getUserId())
+                .username(sub.getUsername())
                 .parentId(sub.getParentId())
                 .content(sub.getContent())
                 .createTime(sub.getGmtCreate())
@@ -98,10 +103,10 @@ public class CommentTreeServiceImpl implements CommentTreeService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public PageRestResult<CommentVO> getComments(Long parentId, Integer deep, Integer size, Integer currentPage) {
+    public PageRestResult<CommentVO> getComments(Long parentId, Integer deep, Integer size, Integer pageIndex) {
 
         //参数检查
-        if( null == parentId || deep < 0 || size <= 0 || currentPage <= 0){
+        if( null == parentId || deep < 0 || size <= 0 || pageIndex <= 0){
             RestResult<CommentVO> result = RestResult.fail("参数异常");
             return (PageRestResult)result;
         }
@@ -109,6 +114,9 @@ public class CommentTreeServiceImpl implements CommentTreeService {
         //查得父节点详情
         Comment parent = commentMapper.selectById(parentId);
 
+        if(null == parent){
+            return (PageRestResult)RestResult.fail("请提供正确的父节点");
+        }
         //查询父节点下的子节点
         IPage<Comment> page = new LambdaQueryChainWrapper<>(commentMapper)
                 .between(Comment::getLft, parent.getLft(), parent.getRgt())
@@ -116,7 +124,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
                 .ne(Comment::getId,parent.getId())
                 .orderByAsc(Comment::getLevel)
                 .orderByDesc(Comment::getGmtCreate)
-                .page(new Page<>(currentPage, size));
+                .page(new Page<>(pageIndex, size));
 
         //将查得的子节点列表转为与前端协商的vo对象
         List<CommentVO> voList = page.getRecords().stream().map(po -> {
@@ -128,6 +136,7 @@ public class CommentTreeServiceImpl implements CommentTreeService {
             return CommentVO.builder()
                     .id(po.getId())
                     .userId(po.getUserId())
+                    .username(po.getUsername())
                     .parentId(po.getParentId())
                     .content(po.getContent())
                     .createTime(po.getGmtCreate())

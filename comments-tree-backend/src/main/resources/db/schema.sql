@@ -18,6 +18,7 @@ CREATE TABLE comment
 (
     id           BIGINT       NOT NULL auto_increment unique ,
     user_id      BIGINT       NOT NULL,--提交留言的用户id
+    username      VARCHAR(25) NULL,--提交留言的用户名
     content      VARCHAR(310) NULL,--留言内容
     lft          BIGINT       NULL,--左值
     rgt          BIGINT       NULL,--右值
