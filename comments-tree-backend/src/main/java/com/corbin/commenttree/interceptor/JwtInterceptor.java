@@ -7,10 +7,12 @@ import com.corbin.commenttree.bean.vo.RestResult;
 import com.corbin.commenttree.exception.JwtExpiredException;
 import com.corbin.commenttree.exception.JwtInvalidException;
 import com.corbin.commenttree.service.JwtTokenService;
+import com.corbin.commenttree.util.ThreadLocalUtil;
 import com.nimbusds.jose.JOSEException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+
+import static com.corbin.commenttree.bean.vo.RestCodeEnum.TOKEN_EXPIRED;
 
 /**
  * @author corbin
@@ -57,7 +61,6 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         }
 
         String token = request.getHeader(headerName);
-        log.info("token: {}", token);
 
         if (StringUtils.isEmpty(token) ) {
             RestResult<Object> resp = RestResult.fail("header中" + headerName + "不能为空！");
@@ -66,11 +69,12 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         }
 
         try {
-            PayloadDto payloadDto = jwtTokenService.verifyTokenByHMAC(token, secret);
+            PayloadDto payloadDto = jwtTokenService.verifyTokenByHMAC(token, DigestUtils.md5DigestAsHex(secret.getBytes()));
+            ThreadLocalUtil.set("jwtPayload",payloadDto);
             return true;
-        } catch (ParseException | JOSEException | JwtInvalidException | JwtExpiredException e) {
+        }catch (ParseException | JOSEException | JwtInvalidException | JwtExpiredException e) {
             log.error("verifyTokenByHMAC:",e);
-            RestResult<Object> resp = RestResult.fail("token 不合法");
+            RestResult<Object> resp = RestResult.fail(TOKEN_EXPIRED.message,TOKEN_EXPIRED.code);
             response.getOutputStream().write(JSON.toJSONString(resp).getBytes());
             return false;
         }
